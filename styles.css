@@ -174,8 +174,6 @@ main, .house-bar, .calling { position: relative; z-index: 1; }
 .training { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; }
 .training li { display: grid; grid-template-columns: minmax(12rem, 1fr) 2fr; gap: 1rem; }
 .training span { color: var(--paper-dim); }
-.playbill-foot { margin-top: 3rem; display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; font: 0.72rem/1.4 var(--mono); color: var(--paper-dim); }
-.playbill-foot p { margin: 0; }
 
 @media (max-width: 40rem) {
   .playbill-head { grid-template-columns: 6.5rem 1fr; }

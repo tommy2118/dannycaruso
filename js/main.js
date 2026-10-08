@@ -3,7 +3,7 @@
 
 import { actor, productions } from "./production-data.js";
 import { cueSheet, resumeRows } from "./credits.js";
-import { text, tally, renderShow, renderCredits, renderTraining } from "./render.js";
+import { text, renderShow, renderCredits, renderTraining } from "./render.js";
 import { createCaller } from "./caller.js";
 import { createCueRunner } from "./cue-runner.js";
 import { createStage } from "./stage.js";
@@ -24,9 +24,6 @@ Object.assign($("[data-headshot]"), actor.headshot);
 $("[data-now]").innerHTML = text(actor.now);
 $("[data-program]").innerHTML = text(actor.program);
 $("[data-contact]").innerHTML = text(actor.contact);
-
-const gaps = tally(Object.values(actor), productions.map(Object.values));
-$("[data-gaps]").textContent = `${gaps} marked gaps for Danny to fill`;
 
 const stage = createStage($("#stage"), {
   frame: (fn) => requestAnimationFrame(fn),

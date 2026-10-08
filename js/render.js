@@ -8,8 +8,6 @@ const isBlank = (v) => v && typeof v === "object" && v.kind === "blank";
 // A gap only Danny can fill shows as a marked gap, never a guess.
 export const text = (v) => (isBlank(v) ? `<span class="blank">${escape(v.hint)}</span>` : escape(v));
 
-export const tally = (...values) => values.flat(Infinity).filter(isBlank).length;
-
 export function renderShow(cue, index) {
   const p = cue.production;
   const lead = p.lead ? `<span class="lead">Lead</span>` : "";
