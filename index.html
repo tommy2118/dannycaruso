@@ -1,273 +1,75 @@
-<!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<!doctype html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Danny Caruso - Actor, Creative Artist, and Performer based at Waldorf University">
-    <title>Danny Caruso - Actor Portfolio</title>
-    <!-- Tailwind CSS and Alpine.js -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/2.3.0/alpine.js" defer></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Danny Caruso, Actor</title>
+  <meta name="description" content="Danny Caruso, actor. Credits, training and contact.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
-<body class="bg-gray-50" x-data="{ isOpen: false }">
-    <!-- Navbar -->
-    <nav class="sticky top-0 bg-white/90 backdrop-blur-md shadow-sm z-50">
-        <div class="max-w-6xl mx-auto px-4">
-            <div class="flex justify-between items-center h-16">
-                <a href="#" class="font-bold text-2xl text-blue-600">DC</a>
+<body>
+  <canvas id="stage" aria-hidden="true"></canvas>
 
-                <!-- Mobile menu button -->
-                <button @click="isOpen = !isOpen" class="md:hidden">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path x-show="!isOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M4 6h16M4 12h16M4 18h16" />
-                        <path x-show="isOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-
-                <!-- Desktop menu -->
-                <div class="hidden md:flex space-x-8">
-                    <a href="#about" class="text-gray-600 hover:text-blue-500 transition-colors">About</a>
-                    <a href="#experience" class="text-gray-600 hover:text-blue-500 transition-colors">Experience</a>
-                    <a href="#gallery" class="text-gray-600 hover:text-blue-500 transition-colors">Gallery</a>
-                </div>
-            </div>
-
-            <!-- Mobile menu -->
-            <div x-show="isOpen" class="md:hidden">
-                <a href="#about" class="block py-2 text-gray-600 hover:text-blue-500" @click="isOpen = false">About</a>
-                <a href="#experience" class="block py-2 text-gray-600 hover:text-blue-500" @click="isOpen = false">Experience</a>
-                <a href="#gallery" class="block py-2 text-gray-600 hover:text-blue-500" @click="isOpen = false">Gallery</a>
-            </div>
-        </div>
+  <header class="house-bar">
+    <a class="monogram" href="#top" aria-label="Danny Caruso, back to the top">DC</a>
+    <nav aria-label="Sections">
+      <a href="#shows">The shows</a>
+      <a href="#resume">Resume</a>
     </nav>
+  </header>
 
-    <!-- Header -->
-    <header class="relative bg-gradient-to-r from-blue-600 to-purple-600 text-white overflow-hidden">
-        <div class="absolute inset-0 bg-grid-white/[0.2] bg-[size:20px_20px]"></div>
-        <div class="relative max-w-4xl mx-auto py-24 px-4 text-center">
-            <div class="mb-8 relative">
-                <div class="absolute inset-0 bg-blue-600 rounded-full blur-2xl opacity-50 animate-pulse"></div>
-                <!-- Headshot: increased w/h from 40/48/56 to 48/56/64 -->
-                <img
-                    src="public/danny_headshot.jpeg"
-                    alt="Danny Caruso Headshot"
-                    class="relative rounded-full mx-auto shadow-xl border-4 border-white/20
-                           w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64 object-cover"
-                >
-            </div>
-            <h1 class="text-5xl font-bold mb-4">Danny Caruso</h1>
-            <p class="text-xl text-blue-100">Actor • Creative Artist • Performer</p>
-            <div class="mt-8 flex justify-center space-x-4">
-                <a
-                    href="#experience"
-                    class="bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-800 transition-colors"
-                >
-                    View Experience
-                </a>
-            </div>
-        </div>
-    </header>
+  <main>
+    <section class="cue cue--preshow" id="top" data-cue="0">
+      <p class="eyebrow">Preshow <span aria-hidden="true">&middot;</span> the ghost light is on</p>
+      <h1 class="name">Danny <em>Caruso</em></h1>
+      <p class="billing">Actor</p>
+      <p class="hint" id="shows">Scroll to run the show</p>
+    </section>
 
-    <!-- Main Content -->
-    <main class="max-w-4xl mx-auto px-4 py-16 space-y-24">
-        <!-- About Section -->
-        <section id="about">
-            <div class="grid md:grid-cols-2 gap-12 items-center">
-                <div>
-                    <h2 class="text-4xl font-bold mb-6 text-gray-800">About Me</h2>
-                    <p class="text-gray-600 leading-relaxed mb-6">
-                        A 2021 Holy Trinity Catholic High School graduate, I came to Waldorf University on a Creative Writing
-                        Scholarship. Inspired by my older brother Tommy's theatrical pursuits, I discovered my passion for
-                        performance through dinner theatre and musicals at HTC under Stewart Beyer's direction. Now, I'm pursuing
-                        both writing and acting, letting both creative paths shape my journey.
-                    </p>
-                    <ul class="grid grid-cols-2 gap-4 text-sm">
-                        <li class="bg-gray-100 p-3 rounded-lg">
-                            <span class="block text-gray-600">Education</span>
-                            <span class="font-semibold">Waldorf University</span>
-                            <span class="text-sm text-gray-500">Creative Writing Scholar</span>
-                        </li>
-                        <li class="bg-gray-100 p-3 rounded-lg">
-                            <span class="block text-gray-600">Major</span>
-                            <span class="font-semibold">Creative Writing & Theater</span>
-                        </li>
-                        <li class="bg-gray-100 p-3 rounded-lg">
-                            <span class="block text-gray-600">Experience</span>
-                            <span class="font-semibold">6+ Productions</span>
-                        </li>
-                        <li class="bg-gray-100 p-3 rounded-lg">
-                            <span class="block text-gray-600">Specialization</span>
-                            <span class="font-semibold">Musical Theater</span>
-                        </li>
-                    </ul>
-                </div>
-                <div class="relative">
-                    <div class="absolute inset-0 bg-blue-600 rounded-lg blur-xl opacity-20"></div>
-                    <img
-                        src="public/danny_caruso1.jpeg"
-                        alt="Danny Caruso Portrait"
-                        class="relative rounded-lg shadow-xl"
-                    >
-                </div>
-            </div>
-        </section>
+    <div data-shows></div>
 
-        <!-- Experience Section -->
-        <section id="experience">
-            <h2 class="text-4xl font-bold mb-12 text-gray-800 text-center">Featured Roles</h2>
-            <div class="grid md:grid-cols-2 gap-6">
-                <div class="group bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow">
-                    <div class="aspect-video bg-gray-100 relative overflow-hidden">
-                        <img
-                            src="public/addams_family.jpg"
-                            alt="The Addams Family"
-                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        >
-                    </div>
-                    <div class="p-6">
-                        <h3 class="font-bold text-xl mb-2 text-gray-800">The Addams Family</h3>
-                        <p class="text-gray-600 mb-4">Lead Role: Gomez Addams</p>
-                        <div class="flex items-center text-sm text-gray-500">
-                            <span class="mr-4">Waldorf University</span>
-                            <span>2023</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="group bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow">
-                    <div class="aspect-video bg-gray-100 relative overflow-hidden">
-                        <img
-                            src="public/and_then_there_were_none.jpg"
-                            alt="And Then There Were None"
-                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        >
-                    </div>
-                    <div class="p-6">
-                        <h3 class="font-bold text-xl mb-2 text-gray-800">And Then There Were None</h3>
-                        <p class="text-gray-600 mb-4">
-                            Role: Anthony Marston - A young, wealthy, and obnoxious character with a love for fast cars
-                        </p>
-                        <p class="text-sm text-gray-500 mb-4">
-                            Part of Waldorf University's 2021-22 season
-                        </p>
-                        <div class="flex items-center text-sm text-gray-500">
-                            <span class="mr-4">Waldorf University</span>
-                            <span>2021</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <section class="cue cue--curtain" id="resume" aria-labelledby="resume-title">
+      <article class="playbill">
+        <header class="playbill-head">
+          <img data-headshot alt="Photo of Danny Caruso">
+          <div>
+            <p class="playbill-kicker">Curtain call</p>
+            <h2 id="resume-title">Danny Caruso</h2>
+            <p class="playbill-billing">Actor</p>
+            <p data-now></p>
+            <p class="small">Program: <span data-program></span></p>
+          </div>
+        </header>
 
-            <div class="mt-12 grid md:grid-cols-3 gap-6">
-                <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
-                    <h3 class="font-bold text-lg mb-2 text-gray-800">Little Shop of Horrors</h3>
-                    <p class="text-gray-600">Lead Role: Seymour</p>
-                    <p class="text-sm text-gray-500 mt-2">Holy Trinity Catholic High School</p>
-                </div>
-                <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
-                    <h3 class="font-bold text-lg mb-2 text-gray-800">Bury the Dead</h3>
-                    <p class="text-gray-600">Anti-war Drama</p>
-                    <p class="text-sm text-gray-500 mt-2">Waldorf University, 2021</p>
-                </div>
-                <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
-                    <h3 class="font-bold text-lg mb-2 text-gray-800">The Wizard of Oz</h3>
-                    <p class="text-gray-600">Role: Tinman</p>
-                    <p class="text-sm text-gray-500 mt-2">Holy Trinity Catholic High School</p>
-                </div>
-            </div>
-        </section>
+        <h3>Theater</h3>
+        <table class="credits">
+          <thead><tr><th scope="col">Production</th><th scope="col">Role</th><th scope="col">Company</th><th scope="col">Year</th></tr></thead>
+          <tbody data-credits></tbody>
+        </table>
 
-        <!-- Press Section -->
-        <section id="press" class="max-w-4xl mx-auto px-4 py-16">
-            <h2 class="text-4xl font-bold mb-6 text-gray-800 text-center">In the News</h2>
-            <div class="space-y-6">
-                <article class="bg-white rounded-lg shadow-md p-6">
-                    <h3 class="text-2xl font-semibold mb-2 text-gray-800">
-                        HTC Orators Advance to State Contest
-                    </h3>
-                    <p class="text-gray-600 text-base">
-                        Learn how Danny stood out among peers at Holy Trinity Catholic High School,
-                        advancing to a state-level speech contest.
-                    </p>
-                    <a
-                        href="https://www.mississippivalleypublishing.com/daily_democrat/htc-orators-advance-to-state-contest/article_c982efce-a7db-5654-ae25-703354f40ace.html"
-                        class="text-blue-500 hover:text-blue-700 underline mt-4 inline-block"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        Read Full Article
-                    </a>
-                </article>
+        <h3>Training</h3>
+        <ul class="training" data-training></ul>
 
-                <article class="bg-white rounded-lg shadow-md p-6">
-                    <h3 class="text-2xl font-semibold mb-2 text-gray-800">
-                        Caruso Moves on to a Bigger Stage
-                    </h3>
-                    <p class="text-gray-600 text-base">
-                        A feature on Danny’s journey transitioning from high school productions
-                        to the collegiate stage at Waldorf University.
-                    </p>
-                    <a
-                        href="https://www.mississippivalleypublishing.com/daily_democrat/caruso-moves-on-to-a-bigger-stage-acts-in-college-play/article_6553a5e7-aaf8-57f8-86ec-fbb0df3f4251.html"
-                        class="text-blue-500 hover:text-blue-700 underline mt-4 inline-block"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        Read Full Article
-                    </a>
-                </article>
-            </div>
-        </section>
+        <h3>Contact</h3>
+        <p data-contact></p>
 
-        <!-- Gallery Section -->
-        <section id="gallery" class="relative">
-            <div class="absolute inset-0 bg-gradient-to-b from-blue-50 to-white -z-10"></div>
-            <h2 class="text-4xl font-bold mb-12 text-gray-800 text-center">Performance Gallery</h2>
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                <div class="aspect-square bg-gray-100 rounded-lg overflow-hidden">
-                    <img
-                        src="/api/placeholder/400/400"
-                        alt="Performance 1"
-                        class="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
-                    >
-                </div>
-                <div class="aspect-square bg-gray-100 rounded-lg overflow-hidden">
-                    <img
-                        src="/api/placeholder/400/400"
-                        alt="Performance 2"
-                        class="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
-                    >
-                </div>
-                <div class="aspect-square bg-gray-100 rounded-lg overflow-hidden">
-                    <img
-                        src="/api/placeholder/400/400"
-                        alt="Performance 3"
-                        class="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
-                    >
-                </div>
-            </div>
-        </section>
-    </main>
+        <footer class="playbill-foot">
+          <p data-gaps></p>
+          <p>Concept draft. Not published.</p>
+        </footer>
+      </article>
+    </section>
+  </main>
 
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-gray-400 py-12">
-        <div class="max-w-4xl mx-auto px-4">
-            <div class="grid md:grid-cols-2 gap-8">
-                <div>
-                    <h3 class="text-white font-bold text-lg mb-4">Danny Caruso</h3>
-                    <p>Actor and Creative Artist at Waldorf University</p>
-                    <div class="flex space-x-4 mt-4">
-                        <a href="#" class="hover:text-white transition-colors">Instagram</a>
-                        <a href="#" class="hover:text-white transition-colors">LinkedIn</a>
-                    </div>
-                </div>
-                <div class="md:text-right">
-                    <p>&copy; 2024 Danny Caruso. All rights reserved.</p>
-                </div>
-            </div>
-        </div>
-    </footer>
+  <div class="calling" aria-live="polite">
+    <span class="cue-light" aria-hidden="true"></span>
+    <span class="sm">SM</span>
+    <span class="call" data-call></span>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
 </body>
 </html>
-
