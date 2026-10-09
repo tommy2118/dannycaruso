@@ -1,0 +1,8 @@
+<header class="house-bar">
+  <a class="monogram" href="{{ '/#top' | url }}" aria-label="{{ site.name }}, back to the top">DC</a>
+  <nav aria-label="Sections">
+    {%- for item in navigation.main %}
+    <a href="{{ item.url | url }}">{{ item.label }}</a>
+    {%- endfor %}
+  </nav>
+</header>

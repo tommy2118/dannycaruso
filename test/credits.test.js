@@ -1,8 +1,9 @@
 import { test, describe } from "node:test";
 import assert from "node:assert/strict";
 
-import { cueSheet, resumeRows } from "../js/credits.js";
-import { blank } from "../js/production-data.js";
+import { cueSheet, resumeRows } from "../src/assets/js/lib/credits.js";
+
+const blank = (hint) => ({ kind: "blank", hint });
 
 const oz = { show: "The Wizard of Oz", role: "Tin Man", company: "HTC", year: blank("year"), gel: "#f5c542" };
 const addams = { show: "The Addams Family", role: "Gomez Addams", company: "Waldorf University", year: 2023, gel: "#9b6bff" };

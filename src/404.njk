@@ -1,0 +1,25 @@
+---
+layout: layouts/base.njk
+permalink: /404.html
+title: Wrong stage door | Danny Caruso
+eleventyExcludeFromCollections: true
+---
+{% from "macros/fact.njk" import chapter %}
+<canvas class="stage" data-stage-target="canvas" aria-hidden="true"></canvas>
+<div class="fallback" hidden data-stage-target="fallback"></div>
+
+{% include "partials/nav.njk" %}
+
+<main>
+  <section class="cue cue--preshow" {{ chapter(show.cues | first) }}>
+    <p class="eyebrow">404 <span aria-hidden="true">&middot;</span> wrong stage door</p>
+    <h1 class="name">Nothing <em>here</em></h1>
+    <p class="billing">The show is <a href="{{ '/' | url }}">this way</a>.</p>
+  </section>
+</main>
+
+<div class="calling" aria-live="polite">
+  <span class="cue-light" aria-hidden="true"></span>
+  <span class="sm">SM</span>
+  <span class="call" data-stage-target="call"></span>
+</div>

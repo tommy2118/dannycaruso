@@ -1,6 +1,10 @@
-// The lighting rig: one fullscreen shader that paints a dark stage in haze.
-// It takes a look (gel, wash, ghost light, followspot) and fades to it the
-// way a board op runs a cue. It knows nothing about shows, cues or scrolling.
+// =============================================================================
+// RENDERER
+// One fullscreen shader that paints a dark stage in haze: the ghost light on
+// its stand, the gel wash, and the followspot. Draws one frame from the state
+// it is handed. Never reads a clock, schedules a frame, or knows a show.
+// Throws when WebGL2 is unavailable, so the page can show its fallback.
+// =============================================================================
 
 const VERTEX = `#version 300 es
 in vec2 corner;
@@ -110,15 +114,6 @@ void main() {
   outColor = vec4(max(col, 0.0), 1.0);
 }`;
 
-export function hexToRgb(hex) {
-  const n = parseInt(hex.replace("#", ""), 16);
-  return [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((c) => c / 255);
-}
-
-const ease = (k) => k * k * (3 - 2 * k);
-const mix = (a, b, k) => a + (b - a) * k;
-const DARK = { gel: [0, 0, 0], wash: 0, ghost: 0, spot: 0 };
-
 function compile(gl, type, source) {
   const shader = gl.createShader(type);
   gl.shaderSource(shader, source);
@@ -127,90 +122,55 @@ function compile(gl, type, source) {
   return shader;
 }
 
-// Returns null when the browser can't light the stage; the page still works.
-export function createStage(canvas, { frame, clock, still = false, fade = 1600, pixelRatio = 1 }) {
-  const gl = canvas.getContext("webgl2", { antialias: false, alpha: false });
-  if (!gl) return null;
+const UNIFORMS = ["uRes", "uTime", "uAim", "uBulb", "uGel", "uWash", "uGhost", "uSpot"];
 
-  const program = gl.createProgram();
-  gl.attachShader(program, compile(gl, gl.VERTEX_SHADER, VERTEX));
-  gl.attachShader(program, compile(gl, gl.FRAGMENT_SHADER, FRAGMENT));
-  gl.linkProgram(program);
-  gl.useProgram(program);
+export default class Renderer {
+  constructor(canvas) {
+    const gl = canvas.getContext("webgl2", { antialias: false, alpha: false });
+    if (!gl) throw new Error("WebGL2 is not available");
 
-  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
-  const corner = gl.getAttribLocation(program, "corner");
-  gl.enableVertexAttribArray(corner);
-  gl.vertexAttribPointer(corner, 2, gl.FLOAT, false, 0, 0);
+    const program = gl.createProgram();
+    gl.attachShader(program, compile(gl, gl.VERTEX_SHADER, VERTEX));
+    gl.attachShader(program, compile(gl, gl.FRAGMENT_SHADER, FRAGMENT));
+    gl.linkProgram(program);
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(program));
+    gl.useProgram(program);
 
-  const u = Object.fromEntries(
-    ["uRes", "uTime", "uAim", "uBulb", "uGel", "uWash", "uGhost", "uSpot"].map((name) => [name, gl.getUniformLocation(program, name)])
-  );
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+    const corner = gl.getAttribLocation(program, "corner");
+    gl.enableVertexAttribArray(corner);
+    gl.vertexAttribPointer(corner, 2, gl.FLOAT, false, 0, 0);
 
-  let from = DARK, to = DARK, cueStarted = clock();
-  let aim = { x: 0, y: -0.25 }, target = null, lastFrame = clock();
+    this.canvas = canvas;
+    this.gl = gl;
+    this.u = Object.fromEntries(UNIFORMS.map((name) => [name, gl.getUniformLocation(program, name)]));
+  }
 
-  const current = (now) => {
-    const k = fade === 0 ? 1 : ease(Math.min(1, (now - cueStarted) / fade));
-    return {
-      gel: from.gel.map((c, i) => mix(c, to.gel[i], k)),
-      wash: mix(from.wash, to.wash, k),
-      ghost: mix(from.ghost, to.ghost, k),
-      spot: mix(from.spot, to.spot, k),
-    };
-  };
+  get aspect() {
+    return this.canvas.clientWidth / Math.max(1, this.canvas.clientHeight);
+  }
 
-  const resize = () => {
-    const w = Math.round(canvas.clientWidth * pixelRatio);
-    const h = Math.round(canvas.clientHeight * pixelRatio);
+  // look: { gel: [r, g, b], wash, ghost, spot }; aim: stage units.
+  render({ time, look, aim, dpr }) {
+    const { canvas, gl, u } = this;
+    const w = Math.round(canvas.clientWidth * dpr);
+    const h = Math.round(canvas.clientHeight * dpr);
     if (canvas.width !== w || canvas.height !== h) {
       canvas.width = w;
       canvas.height = h;
       gl.viewport(0, 0, w, h);
     }
-  };
 
-  const draw = () => {
-    const now = clock();
-    const seconds = still ? 12 : now / 1000;
-    const dt = Math.min(0.1, (now - lastFrame) / 1000);
-    lastFrame = now;
-    resize();
-
-    const aspect = canvas.width / canvas.height;
-    // With no one on the spot, it holds the actor's mark and breathes.
-    const goal = target ?? { x: Math.sin(seconds * 0.45) * 0.06, y: -0.26 + Math.sin(seconds * 0.3) * 0.015 };
-    // A followspot operator lags the actor a little.
-    const follow = still ? 1 : 1 - Math.exp(-dt * 5);
-    aim = { x: mix(aim.x, goal.x, follow), y: mix(aim.y, goal.y, follow) };
-
-    const look = current(now);
-    gl.uniform2f(u.uRes, canvas.width, canvas.height);
-    gl.uniform1f(u.uTime, seconds);
+    gl.uniform2f(u.uRes, w, h);
+    gl.uniform1f(u.uTime, time);
     gl.uniform2f(u.uAim, aim.x, aim.y);
-    gl.uniform2f(u.uBulb, Math.min(0.42, aspect * 0.3), -0.02);
+    // The ghost light stands stage right of the name, closer in on a phone.
+    gl.uniform2f(u.uBulb, Math.min(0.42, (w / h) * 0.3), -0.02);
     gl.uniform3fv(u.uGel, look.gel);
     gl.uniform1f(u.uWash, look.wash);
     gl.uniform1f(u.uGhost, look.ghost);
     gl.uniform1f(u.uSpot, look.spot);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
-    frame(draw);
-  };
-
-  return {
-    setLook(look) {
-      const now = clock();
-      from = current(now);
-      to = { ...look, gel: hexToRgb(look.gel) };
-      cueStarted = now;
-    },
-    // x and y are fractions of the viewport, from the top left.
-    aim(x, y) {
-      const aspect = canvas.clientWidth / canvas.clientHeight;
-      target = { x: (x - 0.5) * aspect, y: 0.5 - y };
-    },
-    rest() { target = null; },
-    start() { frame(draw); },
-  };
+  }
 }

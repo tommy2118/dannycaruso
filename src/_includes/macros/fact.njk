@@ -1,0 +1,9 @@
+{# A fact, or a gap only Danny can fill, shown as a marked gap, never a guess. #}
+{% macro fact(value) -%}
+{%- if value.kind == "blank" -%}<span class="blank">{{ value.hint }}</span>{%- else -%}{{ value }}{%- endif -%}
+{%- endmacro %}
+
+{# The look a chapter announces to the stage when it reaches mid-screen. #}
+{% macro chapter(cue) -%}
+data-controller="chapter" data-chapter-scene-value="stage" data-chapter-look-value="{{ { label: cue.label, look: cue.look } | dump }}"
+{%- endmacro %}

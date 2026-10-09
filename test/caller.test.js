@@ -1,7 +1,7 @@
 import { test, describe } from "node:test";
 import assert from "node:assert/strict";
 
-import { standbyLine, goLine } from "../js/caller.js";
+import { standbyLine, goLine } from "../src/assets/js/lib/caller.js";
 
 describe("the stage manager's calls", () => {
   test("warns before a cue", () => {

@@ -1,0 +1,83 @@
+---
+layout: layouts/base.njk
+---
+{% from "macros/fact.njk" import fact, chapter %}
+{% set preshow = show.cues | first %}
+{% set curtain = show.cues | last %}
+{% set actor = danny.actor %}
+
+<canvas class="stage" data-stage-target="canvas" aria-hidden="true"></canvas>
+<div class="fallback" hidden data-stage-target="fallback"></div>
+
+{% include "partials/nav.njk" %}
+
+<main>
+  <section class="cue cue--preshow" id="top" {{ chapter(preshow) }}>
+    <p class="eyebrow">Preshow <span aria-hidden="true">&middot;</span> the ghost light is on</p>
+    <h1 class="name">Danny <em>Caruso</em></h1>
+    <p class="billing">{{ actor.billing }}</p>
+    <p class="hint" id="shows">Scroll to run the show</p>
+  </section>
+
+  {% for cue in show.cues %}{% if cue.kind == "show" %}
+  {% set p = cue.production %}
+  <section class="cue cue--show" style="--gel: {{ p.gel }}" aria-labelledby="show-{{ loop.index }}" {{ chapter(cue) }}>
+    <div class="drop">
+      <p class="cue-tag">{{ cue.label | replace("lights", "LX") }}</p>
+      <h2 class="show-title" id="show-{{ loop.index }}">{{ fact(p.show) }}</h2>
+    </div>
+    <div class="credit">
+      <p class="as">as</p>
+      <p class="role">{{ fact(p.role) }}{% if p.lead %}<span class="lead">Lead</span>{% endif %}</p>
+      <p class="where">{{ fact(p.company) }} <span aria-hidden="true">&middot;</span> {{ fact(p.year) }}</p>
+      {% if p.note %}<p class="note">{{ fact(p.note) }}</p>{% endif %}
+    </div>
+  </section>
+  {% endif %}{% endfor %}
+
+  <section class="cue cue--curtain" id="resume" aria-labelledby="resume-title" {{ chapter(curtain) }}>
+    <article class="playbill">
+      <header class="playbill-head">
+        <img src="{{ actor.headshot.src | url }}" width="{{ actor.headshot.width }}" height="{{ actor.headshot.height }}" alt="Photo of {{ actor.name }}">
+        <div>
+          <p class="playbill-kicker">Curtain call</p>
+          <h2 id="resume-title">{{ actor.name }}</h2>
+          <p class="playbill-billing">{{ actor.billing }}</p>
+          <p>{{ fact(actor.now) }}</p>
+          <p class="small">Program: {{ fact(actor.program) }}</p>
+        </div>
+      </header>
+
+      <h3>Theater</h3>
+      <table class="credits">
+        <thead><tr><th scope="col">Production</th><th scope="col">Role</th><th scope="col">Company</th><th scope="col">Year</th></tr></thead>
+        <tbody>
+          {%- for p in show.resume %}
+          <tr>
+            <th scope="row">{{ fact(p.show) }}</th>
+            <td>{{ fact(p.role) }}</td>
+            <td>{{ fact(p.company) }}</td>
+            <td>{{ fact(p.year) }}</td>
+          </tr>
+          {%- endfor %}
+        </tbody>
+      </table>
+
+      <h3>Training</h3>
+      <ul class="training">
+        {%- for t in actor.training %}
+        <li><strong>{{ fact(t.school) }}</strong><span>{{ fact(t.detail) }}</span></li>
+        {%- endfor %}
+      </ul>
+
+      <h3>Contact</h3>
+      <p>{{ fact(actor.contact) }}</p>
+    </article>
+  </section>
+</main>
+
+<div class="calling" aria-live="polite">
+  <span class="cue-light" aria-hidden="true"></span>
+  <span class="sm">SM</span>
+  <span class="call" data-stage-target="call"></span>
+</div>

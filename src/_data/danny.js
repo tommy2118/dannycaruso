@@ -5,21 +5,22 @@
 // marked blank("hint"); the page shows them as marked gaps, not guesses.
 //
 // Productions are listed in the order they were played. The show runs them
-// in this order; the resume reverses it.
+// in this order; the resume reverses it. Eleventy serves this file to the
+// templates as `danny`.
 
-export const blank = (hint) => ({ kind: "blank", hint });
+const blank = (hint) => ({ kind: "blank", hint });
 
 const HTC = "Holy Trinity Catholic High School";
 const WALDORF = "Waldorf University";
 
-export const actor = {
+const actor = {
   name: "Danny Caruso",
   billing: "Actor",
   now: "Finishing his master’s at Waldorf University",
   program: blank("master’s program"),
   // A phone photo standing in until a professional headshot matches his
-  // current look; the 2024 headshot (public/danny_headshot.jpeg) no longer does.
-  headshot: { src: "public/danny_2026.jpg", width: 1500, height: 2000 },
+  // current look; the 2024 headshot (danny_headshot.jpeg) no longer does.
+  headshot: { src: "/assets/images/danny_2026.jpg", width: 1500, height: 2000 },
   training: [
     { school: WALDORF, detail: "Creative Writing & Theater, on a Creative Writing scholarship" },
     { school: HTC, detail: "Dinner theater and musicals under Stewart Beyer, class of 2021" },
@@ -28,7 +29,7 @@ export const actor = {
 };
 
 // gel: the color the stage is lit in while the show is up.
-export const productions = [
+const productions = [
   {
     show: "The Wizard of Oz",
     role: "Tin Man",
@@ -77,3 +78,5 @@ export const productions = [
     gel: "#5cc4ff",
   },
 ];
+
+export default { actor, productions };

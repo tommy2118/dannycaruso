@@ -1,0 +1,6 @@
+{
+  "main": [
+    { "label": "The shows", "url": "/#shows" },
+    { "label": "Resume", "url": "/#resume" }
+  ]
+}
